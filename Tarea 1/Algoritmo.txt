@@ -1,0 +1,7 @@
+1. Leer entrada
+2. Verificar entrada
+3. Calcular el tamaño de la matriz
+4. Construir matriz de ceros del tamaño adecuado
+5. Encontrar el centro de la matriz
+6. Para cada coordenada encontrar la mayor distancia al centro (horizontal, vertical), sumarle 1 y escribirla en la matriz
+7. imprimir la respuesta
