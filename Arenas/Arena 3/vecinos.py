@@ -26,7 +26,7 @@ def main():
                 m2[i - 1] = max(values[i] + m2[i - 3], m2[i - 2])
         answ = max(m1[nHouses - 2], m2[nHouses - 2])
 
-        print('Caso #'+ str(case + 1) + ': ' + str(answ))
+        print('Caso #' + str(case + 1) + ': ' + str(answ))
 
 
 main()
