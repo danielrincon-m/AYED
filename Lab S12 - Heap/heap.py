@@ -1,15 +1,3 @@
-# Estructural
-#     -Arreglo
-#     -Heap size
-#     -Policy
-# Servicios:
-#     -left, right, parent
-#     -Heapify(max, min)
-#     -BuildHeap(max, min)
-#     -Insert
-#     -Delete
-#     -getHeap
-#     -Update
 from sys import stdin
 
 
@@ -84,12 +72,14 @@ def entrada():
     return [int(x) for x in stdin.readline().strip().split()]
 
 def main():
+    lista = entrada()
+
     heap = Heap(True)
-    heap.build_heap(entrada())
+    heap.build_heap(lista)
     print(heap.getHeap())
 
     heap = Heap(False)
-    heap.build_heap(entrada())
+    heap.build_heap(lista)
     print(heap.getHeap())
 
 
