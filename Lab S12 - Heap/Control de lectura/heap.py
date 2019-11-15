@@ -74,6 +74,28 @@ class Heap:
         for i in range(self.heap_size, -1, -1):
             self.heapify(i)
 
+    def maximum(self):
+        return max(self.heap)
+
+    def minimum(self):
+        return min(self.heap)
+
+    def extract_max(self):
+        if self.policy == True:
+            if self.heap_size < 1:
+                return None
+            max = self.heap[0]
+            self.delete(0)
+            return max
+
+    def extract_min(self):
+        if self.policy == False:
+            if self.heap_size < 1:
+                return None
+            min = self.heap[0]
+            self.delete(0)
+            return min
+
     # función que retorna la lista que representa al heap
     def getHeap(self):
         return self.heap
