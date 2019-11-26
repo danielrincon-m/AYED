@@ -7,7 +7,7 @@ class DisjointSet:
         self.setList = []
 
     def makeSet(self, rep):
-        self.setList.append(set([rep]))
+        self.setList.append({rep})
 
     def findSet(self, rep):
         for st in self.setList:
@@ -41,14 +41,14 @@ class DisjointSet:
 
 # Funcion que se encarga de encontrar el grafo de menor costo en donde todos los nodos estén conectados
 def MST_Kruskal(graph):
-    mst =  {'V': graph['V'], 'E': []}
+    mst = {'V': graph['V'], 'E': []}
     ds = DisjointSet()
     graph['E'] = sorted(graph['E'], key=lambda arc: (arc[2], arc[0], arc[1]))
     for vertex in graph['V']:
         ds.makeSet(vertex)
     for edge in graph['E']:
         s1, s2 = ds.findSet(edge[0]), ds.findSet(edge[1])
-        if  s1 != s2:
+        if s1 != s2:
             mst['E'].append(edge)
             ds.union(s1,s2)
     return mst
