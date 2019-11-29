@@ -8,7 +8,7 @@ class HashNode:
 
 class HashTable:
     def __init__(self):
-        self.table = [None for _ in range(101)]
+        self.table = [None] * 101
 
     def hash(self, key):
         # Generate hash from key.

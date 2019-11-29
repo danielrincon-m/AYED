@@ -1,0 +1,18 @@
+17
+busque Daniel
+ponga Daniel Alfonso
+busque Daniel
+elimine Daniel
+busque Daniel
+ponga Carlos Pinzón
+ponga Andrés Marcelo
+busque Daniel
+elimine María
+ponga Daniel Alfonso
+busque Daniel
+busque Andrés
+busque Juan
+ponga Daniel Vargas
+ponga Andrés Rocha
+busque Daniel
+busque Andrés

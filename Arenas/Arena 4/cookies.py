@@ -1,74 +1,113 @@
 from sys import stdin
 
-
-class Heap:
+class PriorityQueue(object):
 
     def __init__(self):
-        self.heap = []
-        self.heap_size = None
 
-    def parent(self, i):
-        return i // 2
+        # List of items, flattened binary heap. The first element is not used.
+        # Each node is a tuple of (value, priority, insert_counter)
+        self.nodes = [None]  # first element is not used
 
-    def left(self, i):
-        return 2 * i
+        # Current state of the insert counter
+        self.insert_counter = 0          # tie breaker, keeps the insertion order
 
-    def right(self, i):
-        return 2 * i + 1
+    # Comparison function between two nodes
+    # Higher priority wins
+    # On equal priority: Lower insert counter wins
+    def _is_higher_than(self, a, b):
+        return b[1] > a[1] or (a[1] == b[1] and a[2] > b[2])
 
-    def heapify(self, i):
-        leftSon = self.left(i)
-        rightSon = self.right(i)
-        if leftSon <= self.heap_size and self.heap[leftSon] < self.heap[i]:
-            largest = leftSon
+    # Move a node up until the parent is bigger
+    def _heapify(self, new_node_index):
+        while 1 < new_node_index:
+            new_node = self.nodes[new_node_index]
+            parent_index = new_node_index // 2
+            parent_node = self.nodes[parent_index]
+
+            # Parent too big?
+            if self._is_higher_than(parent_node, new_node):
+                break
+
+            # Swap with parent
+            tmp_node = parent_node
+            self.nodes[parent_index] = new_node
+            self.nodes[new_node_index] = tmp_node
+
+            # Continue further up
+            new_node_index = parent_index
+
+    # Add a new node with a given priority
+    def add(self, value, priority):
+        new_node_index = len(self.nodes)
+        self.insert_counter += 1
+        self.nodes.append((value, priority, self.insert_counter))
+
+        # Move the new node up in the hierarchy
+        self._heapify(new_node_index)
+
+    # Return the top element
+    def peek(self):
+        if len(self.nodes) == 1:
+            return None
         else:
-            largest = i
-        if rightSon <= self.heap_size and self.heap[rightSon] < self.heap[largest]:
-            largest = rightSon
-        if largest != i:
-            self.heap[i], self.heap[largest] = self.heap[largest], self.heap[i]
-            self.heapify(largest)
+            return self.nodes[1][0]
 
-    def build_heap(self, A):
-        self.heap = A
-        self.heap_size = len(A) - 1
-        for i in range(self.heap_size // 2, -1, -1):
-            self.heapify(i)
-
-    def rebuild(self):
-        self.heap_size = len(self.heap) - 1
-        for i in range(self.heap_size // 2, -1, -1):
-            self.heapify(i)
-
-    def getHeap(self):
-        return self.heap
-
-    def insert(self, el):
-        self.heap.append(el)
-        self.rebuild()
-
+    # Remove the top element and return it
     def pop(self):
-        elt = self.heap[0]
-        del(self.heap[0])
-        self.rebuild()
-        return elt
 
-    def heapSize(self):
-        return len(self.heap)
+        if len(self.nodes) == 1:
+            raise LookupError("Heap is empty")
+
+        result = self.nodes[1][0]
+
+        # Move empty space down
+        empty_space_index = 1
+        while empty_space_index * 2 < len(self.nodes):
+
+            left_child_index = empty_space_index * 2
+            right_child_index = empty_space_index * 2 + 1
+
+            # Left child wins
+            if (
+                len(self.nodes) <= right_child_index
+                or self._is_higher_than(self.nodes[left_child_index], self.nodes[right_child_index])
+            ):
+                self.nodes[empty_space_index] = self.nodes[left_child_index]
+                empty_space_index = left_child_index
+
+            # Right child wins
+            else:
+                self.nodes[empty_space_index] = self.nodes[right_child_index]
+                empty_space_index = right_child_index
+
+        # Swap empty space with the last element and heapify
+        last_node_index = len(self.nodes) - 1
+        self.nodes[empty_space_index] = self.nodes[last_node_index]
+        self._heapify(empty_space_index)
+
+        # Throw out the last element
+        self.nodes.pop()
+
+        return result
+
+    def getSize(self):
+        return len(self.nodes) - 1
+
 
 
 def sweetness(a, k):
-    heap = Heap()
-    heap.build_heap(a)
+    heap = PriorityQueue()
+    for i in a:
+        heap.add(i, i)
     steps = 0
     smallerCookie = heap.pop()
     while smallerCookie < k:
-        if heap.heapSize() == 0:
+        if heap.getSize() == 0:
             return -1
 
         secondSmaller = heap.pop()
         newCookie = smallerCookie + (2 * secondSmaller)
-        heap.insert(newCookie)
+        heap.add(newCookie, newCookie)
         steps += 1
 
         smallerCookie = heap.pop()
