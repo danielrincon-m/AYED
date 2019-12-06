@@ -15,7 +15,6 @@ class Graph:
     def createGraph(self, V, E):
         for node in V:
             self.nodes[node] = (math.inf, None)
-            self.visited[node] = False
         for edge in E:
             self.edges.append((edge[0], edge[1], int(edge[2])))
             if edge[0] not in self.neighbors:
@@ -26,7 +25,6 @@ class Graph:
         self.nodes.clear()
         self.edges.clear()
         self.neighbors.clear()
-        self.visited.clear()
 
     def getNodeD(self, name):
         return self.nodes[name][0]
@@ -34,9 +32,8 @@ class Graph:
     def initializeSingleSource(self, source):
         for node in self.nodes:
             self.nodes[node] = (math.inf, None)
-        self.nodes[source] = (0, None)
-        for node in self.visited:
             self.visited[node] = False
+        self.nodes[source] = (0, None)
 
     def relax(self, edge):
         u = self.nodes[edge[0]]
@@ -52,14 +49,12 @@ class Graph:
         q = []
         heapq.heappush(q, (0, source))
         while q:
-            #print(q)
             u = heapq.heappop(q)
             self.visited[u[1]] = True
             adj = self.getNeighbors(u[1])
             for edge in adj:
-                #if not self.visited[edge[1]]:
                 result = self.relax(edge)
-                if result:
+                if result:#not self.visited[edge[1]]:
                     heapq.heappush(q, (edge[2], edge[1]))
 
     def getNeighbors(self, node):
@@ -69,10 +64,10 @@ class Graph:
                 neigh.append(self.edges[edge])
         return neigh
 
-#import time
+import time
 def main():
-    #totalTime = 0
     cases = int(stdin.readline().strip())
+    ti = time.time()
     g = Graph()
     for c in range(cases):
         g.clearGraph()
@@ -85,13 +80,11 @@ def main():
             edges.append((inp[1], inp[0], int(inp[2])))
 
         g.createGraph(nodes, edges)
-        #ti = time.time()
         g.dijkstra(s)
-        #totalTime += (time.time() - ti)
         ans = g.getNodeD(t)
         pans = str(ans) if ans != math.inf else "unreachable"
         print("Case #" + str(c + 1) + ": " + pans)
-    #print("total dijkstra time: ", time.time() - ti)
+    print("total time: ", time.time() - ti)
 
 
 main()
